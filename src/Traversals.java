@@ -11,7 +11,18 @@ public class Traversals {
    * @return the sum of leaf node values, or 0 if the tree is null
    */
   public static int sumLeafNodes(TreeNode<Integer> node) {
-    return 0;
+    if (node == null) {
+      return 0;
+    }
+    if (node.left == null && node.right == null) {
+      return node.value;
+    }
+    int left = sumLeafNodes(node.left);
+    int right = sumLeafNodes(node.right);
+    int overall = left + right;
+
+
+    return overall;
   }
 
   /**
@@ -23,7 +34,17 @@ public class Traversals {
    * @return the count of internal nodes, or 0 if the tree is null
    */
   public static int countInternalNodes(TreeNode<Integer> node) {
-    return 0;
+    if (node == null) {
+      return 0;
+    }
+    int leftCount = countInternalNodes(node.left);
+    int rightCount = countInternalNodes(node.right);
+
+    int overallCount = leftCount + rightCount;
+    if (node.left != null || node.right != null) {
+      overallCount++;
+    }
+    return overallCount;
   }
 
   /**
@@ -37,7 +58,12 @@ public class Traversals {
    * @return a post-order traversal string, or an empty string if the tree is null
    */
   public static <T> String buildPostOrderString(TreeNode<T> node) {
-    return null;
+    if (node == null) return "";
+    String left = buildPostOrderString(node.left);
+    String right = buildPostOrderString(node.right);
+    String overall = left + right + node.value;
+
+    return overall;
   }
 
   /**
@@ -49,7 +75,33 @@ public class Traversals {
    * @return a list of node values in a top-to-bottom order, or an empty list if the tree is null
    */
   public static <T> List<T> collectLevelOrderValues(TreeNode<T> node) {
-    return null;
+    List<T> list = new ArrayList<>();
+    Queue<TreeNode<T>> queue = new LinkedList<>();
+    TreeNode<T> curr = null;
+    if (node == null) return list;
+
+    queue.offer(node);
+    //while queue is not emtpy
+    while (!queue.isEmpty()) {
+      //set the curr value to front of queue
+      curr = queue.poll();
+      //add curr value to the list
+      list.add(curr.value);
+      //pop the from queue
+    //if curr.left.value != null)
+      if (curr.left != null) {
+        // push curr to queue
+        queue.offer(curr.left);
+      }
+      //if curr.right.value != null)
+      if (curr.right != null) {
+        // push curr to queue
+        queue.offer(curr.right);
+      }
+    }
+    
+
+    return list;
   }
 
   /**
@@ -60,7 +112,29 @@ public class Traversals {
    * @return the number of unique values in the tree, or 0 if the tree is null
    */
   public static int countDistinctValues(TreeNode<Integer> node) {
-    return 0;
+    Stack<TreeNode<Integer>> stack = new Stack<>();
+    if (node == null) return 0;
+    Set<Integer> count = new HashSet<>();
+    TreeNode<Integer> current = node;
+
+    stack.push(current);
+    while (!stack.isEmpty()){
+      // current = stack.peek();
+      // current = stack.pop();
+      // count.add(current.value);
+      
+      while (current != null) {
+        stack.push(current);
+        current = current.left;
+      }
+      if (current == null) {
+        current = stack.pop();
+        count.add(current.value);
+        current = current.right;
+      }
+    }
+
+    return count.size();
   }
 
   /**
@@ -72,6 +146,32 @@ public class Traversals {
    * @return true if there exists a strictly increasing root-to-leaf path, false otherwise
    */
   public static boolean hasStrictlyIncreasingPath(TreeNode<Integer> node) {
+    
+    Queue<TreeNode<Integer>> queue = new LinkedList<>();
+    TreeNode<Integer> curr = null;
+    if (node == null) return false;
+
+    queue.offer(node);
+    //while queue is not emtpy
+    while (!queue.isEmpty()) {
+      //set the curr value to front of queue
+      curr = queue.poll();
+      
+      //pop the from queue
+    //if curr.left.value != null)
+      if (curr.left == null && curr.left == null) {
+        return true;
+      }
+      if (curr.left != null && (curr.value < curr.left.value)) {
+        // push curr to queue
+        queue.offer(curr.left);
+      }
+      //if curr.right.value != null)
+      if (curr.right != null && (curr.value < curr.right.value)) {
+        // push curr to queue
+        queue.offer(curr.right);
+      }
+    }
     return false;
   }
 
